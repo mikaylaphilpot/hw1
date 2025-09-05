@@ -38,10 +38,9 @@ int main() {
     int L;
     int M;
     // Registers
-    int * PC;
-    int * BP;
-    int * SP;
-    int IR[] = malloc(sizeof(int)*3);
+    int PC, BP, SP;
+    int IR[3];
+    
 
     
 
