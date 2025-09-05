@@ -20,3 +20,20 @@ Class : COP 3402 - Systems Software - Fall 2025
 Instructor : Dr . Jie Lin
 Due Date : Friday , September 12 th , 2025
 */
+
+int main() {
+    // array to represent the entire PAS
+    int PAS [500] = {0};
+    // instruction addresses
+    int OP; 
+    int L;
+    int M;
+    // Registers
+    int * PC;
+    int * BP;
+    int * SP;
+    int IR[] = malloc(sizeof(int)*3);
+
+    
+
+}
