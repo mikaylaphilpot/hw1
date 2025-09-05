@@ -33,7 +33,5 @@ int main() {
     int * BP;
     int * SP;
     int IR[] = malloc(sizeof(int)*3);
-
     
-
 }
