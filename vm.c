@@ -32,6 +32,12 @@ Due Date : Friday , September 12 th , 2025
 */
 #include <stdio.h>
 
+struct instruction{
+    int OP; 
+    int L;
+    int M;
+};
+
 // array to represent the entire PAS
 int PAS [500] = {0};
 
@@ -41,7 +47,7 @@ int base ( int BP , int L ){
         arb = PAS [ arb ]; // follow static link
         L --;
     }
-return arb ;
+    return arb ;
 }
 
 /* Print out the PAS */
@@ -49,15 +55,18 @@ void print(int PAS[500]){
 
 }
 
-int main() {
+int main(int argc) {
+
+    if(argc != 1){
+        printf("Error! Wrong number of arguments.");
+        return 0;
+    }
     
-    // instruction addresses
-    int OP; 
-    int L;
-    int M;
+    // instruction register
+    struct instruction IR;
+    
     // Registers
     int PC, BP, SP;
-    int IR[3];
     
     FILE *inputFile = fopen("input.txt", "r");
 
@@ -78,76 +87,77 @@ int main() {
 
     
     PC = 499;
-    SP = i + 1;
-    BP = i;
+    SP = i;
+    BP = SP - 1;
+    
 
     while(!(PAS[i] == 9 && PAS[i-1] == 0 && PAS[i-2] == 3)){
         //printf("I");
-        IR[0] = PAS[PC];
-        IR[1] = PAS[PC-1];
-        IR[2] = PAS[PC-2];
+        IR.OP = PAS[PC];
+        IR.L = PAS[PC-1];
+        IR.M = PAS[PC-2];
         
         PC = PC -3;
 
-        if (IR[0] == 1) {
+        if (IR.OP == 1) {
             SP = SP - 1;  
-            PAS[SP] = IR[2];
+            PAS[SP] = IR.M;
         }
-        else if (IR[0] == 2) {
-            if(IR[2] == 0){
+        else if (IR.OP == 2) {
+            if(IR.M == 0){
                 SP = BP + 1;
                 BP = PAS[SP - 2];
                 PC = PAS[SP - 3];
 
-            } else if(IR[2] == 1){
+            } else if(IR.M == 1){
                 PAS[SP + 1] = PAS [SP + 1] + PAS[SP];
                 SP = SP + 1;
 
-            } else if(IR[2] == 2){
+            } else if(IR.M == 2){
                 PAS[SP + 1] = PAS [SP + 1] - PAS[SP];
                 SP = SP + 1;
 
-            } else if(IR[2] == 3){
+            } else if(IR.M == 3){
                 PAS[SP + 1] = PAS [SP + 1] * PAS[SP];
                 SP = SP + 1;
 
-            } else if(IR[2] == 4){
+            } else if(IR.M == 4){
                 PAS[SP + 1] = PAS [SP + 1] / PAS[SP];
                 SP = SP + 1;
 
-            } else if(IR[2] == 5){
+            } else if(IR.M == 5){
                 PAS[SP + 1] = (PAS [SP + 1] == PAS[SP]);
                 SP = SP + 1;
 
-            } else if(IR[2] == 6){
+            } else if(IR.M == 6){
                 if(PAS[SP+1] != PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
 
-            } else if(IR[2] == 7){
+            } else if(IR.M == 7){
                 if(PAS[SP+1] < PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
 
-            } else if(IR[2] == 8){
+            } else if(IR.M == 8){
                 if(PAS[SP+1] <= PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
 
-            } else if(IR[2] == 9){
+            } else if(IR.M == 9){
                 if(PAS[SP+1] > PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
 
-            } else if(IR[2] == 10){
+            } else if(IR.M == 10){
                 if(PAS[SP+1] >= PAS[SP])
                     PAS[SP+1] = 1;
                 else    
@@ -155,38 +165,38 @@ int main() {
                 SP++;
             } 
         }
-        else if (IR[0] == 3) {
+        else if (IR.OP == 3) {
             SP = SP - 1;
-            PAS[SP] = PAS[base(BP, IR[1]) - IR[2]];
+            PAS[SP] = PAS[base(BP, IR.L) - IR.M];
         }
-        else if (IR[0] == 4) {
-            PAS[SP] = PAS[base(BP, IR[1]) - IR[2]];
+        else if (IR.OP == 4) {
+            PAS[SP] = PAS[base(BP, IR.L) - IR.M];
             SP++;
         }
-        else if (IR[0] == 5) {
-            PAS[SP - 1] = base(BP, IR[1]);
+        else if (IR.OP == 5) {
+            PAS[SP - 1] = base(BP, IR.L);
             PAS[SP - 2] = BP;
             PAS[SP - 3] = PC;
             BP = SP - 1;
-            PC = IR[2];
+            PC = IR.M;
         }
-        else if (IR[0] == 6) {
-            SP = SP - IR[2];
+        else if (IR.OP == 6) {
+            SP = SP - IR.M;
         }
-        else if (IR[0] == 7) {  
-            PC = PC + 3 - IR[2];
+        else if (IR.OP == 7) {  
+            PC = PC + 3 - IR.M;
         }
-        else if (IR[0] == 8) {
+        else if (IR.OP == 8) {
             if(PAS[SP] == 0) {
-                PC = IR[2];
+                PC = IR.M;
             }
             SP = SP + 1;
         }
-        else if (IR[0] == 9) {
-            if(IR[2]== 1){
+        else if (IR.OP == 9) {
+            if(IR.M== 1){
                 printf("%d", PAS[SP]);
                 SP = SP + 1;
-            } else if(IR[2]== 2){
+            } else if(IR.M== 2){
                 SP = SP - 1;
                 printf("Please Enter an Integer: ");
                 scanf("%d", &PAS[SP]);
