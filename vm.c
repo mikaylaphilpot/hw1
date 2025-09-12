@@ -52,7 +52,8 @@ int base ( int BP , int L ){
 
 /* Print out the PAS */
 void print(int PAS[500]){
-
+    printf("\t\tL\tM\tPC\tBP\tSP\tstack\n");
+    printf("Initial values: \t ");
 }
 
 int main(int argc) {
@@ -68,7 +69,7 @@ int main(int argc) {
     // Registers
     int PC, BP, SP;
     
-    FILE *inputFile = fopen("input.txt", "r");
+    FILE *inputFile = fopen("../input.txt", "r");
 
     if (inputFile == NULL) {
         printf("Error opening file.\n");
