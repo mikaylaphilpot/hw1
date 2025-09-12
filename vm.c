@@ -46,7 +46,8 @@ return arb ;
 
 /* Print out the PAS */
 void print(int PAS[500]){
-
+    printf("\t\tL\tM\tPC\tBP\tSP\tstack\n");
+    printf("Initial values: \t ");
 }
 
 int main() {
@@ -59,7 +60,7 @@ int main() {
     int PC, BP, SP;
     int IR[3];
     
-    FILE *inputFile = fopen("input.txt", "r");
+    FILE *inputFile = fopen("../input.txt", "r");
 
     if (inputFile == NULL) {
         printf("Error opening file.\n");
@@ -78,8 +79,8 @@ int main() {
 
     
     PC = 499;
-    SP = i + 1;
-    BP = i;
+    SP = i;
+    BP = i -1;
 
     while(!(PAS[i] == 9 && PAS[i-1] == 0 && PAS[i-2] == 3)){
         //printf("I");
