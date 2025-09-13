@@ -84,7 +84,12 @@ void print(int PAS[500]) {
     if(IR.OP == 9) {
         printf("\nSYS");
     }
-    printf("\t%d \t%d \t%d \t%d \t%d \t%d\n\n\n", IR.L, IR.M, PC, BP, SP, 0);
+    printf("\t%d \t%d \t%d \t%d \t%d \t", IR.L, IR.M, PC, BP, SP);
+    for (int i = BP; BP-5 <= i; i--) {
+        printf("%d ", PAS[i]);
+        
+    }
+    printf("\n\n");
 }
 
 int main(int argc) {
@@ -98,7 +103,7 @@ int main(int argc) {
     
 
     
-    FILE *inputFile = fopen("input.txt", "r");
+    FILE *inputFile = fopen("../input.txt", "r");
 
     if (inputFile == NULL) {
         printf("Error opening file.\n");
@@ -118,7 +123,7 @@ int main(int argc) {
     BP = SP - 1;
     printf("\tL \tM \tPC \tBP \tSP \tstack");
     printf("\nInitial values: \t%d \t%d \t%d", PC, BP, SP);
-    while(!(PAS[i] == 9 && PAS[i-1] == 0 && PAS[i-2] == 3)){
+    while(1){
         
         //printf("I");
         IR.OP = PAS[PC];
@@ -238,6 +243,10 @@ int main(int argc) {
                 printf("\nPlease Enter an Integer: ");
                 scanf("%d", &PAS[SP]);
                 
+            }
+            else if (IR.M == 3) {
+                print(&PAS[500]);
+                break;
             }
             print(&PAS[500]);
         }
