@@ -32,7 +32,7 @@ Due Date : Friday , September 12th , 2025
 */
 #include <stdio.h>
 
-// INSTRUCTION STRUCT AND GLOBAL VARIABLE
+// Create IR struct
 struct instruction{
     int OP; 
     int L;
@@ -56,13 +56,39 @@ int base ( int BP , int L ){
 }
 
 /* Print out the PAS */
-void printPAS() {
-
+void print(int PAS[500]) {
+    // label instructions based on opcode
     if(IR.OP == 1) {
         printf("\nLIT");
     }
     if(IR.OP == 2) {
-        printf("\nOPR");
+        // label opcode 2 instructions based on memory
+        if(IR.M == 0)
+            printf("\nRTN");
+        else if(IR.M == 1)
+            printf("\nADD");
+        else if(IR.M == 2)
+            printf("\nSUB");
+        else if (IR.M == 3)
+            printf("\nMUL");
+        else if (IR.M == 4)
+            printf("\nDIV");
+        else if (IR.M == 5)
+            printf("\nEQL");
+        else if (IR.M == 6)
+            printf("\nNEQ");
+        else if (IR.M == 7) {
+            printf("\nLSS");
+        }
+        else if (IR.M == 8) {
+            printf("\nLEQ");
+        }
+        else if (IR.M == 9) {
+            printf("\nGTR");
+        }
+        else if (IR.M == 10) {
+            printf("\nGEQ");
+        }
     }
     if(IR.OP == 3) {
         printf("\nLOD");
@@ -88,18 +114,20 @@ void printPAS() {
 
         
     }
-
-    printf("\t%d \t%d \t%d \t%d \t%d ", IR.L, IR.M, PC, BP, SP);
-    
-    
-    printf("\n\n\n");
-
+    // print current register values
+    printf("\t%d \t%d \t%d \t%d \t%d \t", IR.L, IR.M, PC, BP, SP);
+    // print current stack
+    for (int i = 439; 434 <= i; i--) {
+        printf("%d ", PAS[i]);
+        
+    }
+    printf("\n\n");
 }
 
 int main(int argc) {
 
     // Checking argument count
-    if(argc != 1){
+    if(argc != 2){
         printf("Error! Wrong number of arguments.");
         return 0;
     }
@@ -226,6 +254,7 @@ int main(int argc) {
             printPAS();
         }
         else if (IR.OP == 5) {
+            // Call procedure
             PAS[SP - 1] = base(BP, IR.L);
             PAS[SP - 2] = BP;
             PAS[SP - 3] = PC;
@@ -234,14 +263,17 @@ int main(int argc) {
             printPAS();
         }
         else if (IR.OP == 6) {
+            // Allocating memory on the stack
             SP = SP - IR.M;
             printPAS();
         }
         else if (IR.OP == 7) {  
+            // Unconditional jumps
             PC = 499 - IR.M;
             printPAS();
         }
         else if (IR.OP == 8) {
+            // Conditional jumps
             if(PAS[SP] == 0) {
                 PC = 499 - IR.M;
             }
@@ -250,9 +282,11 @@ int main(int argc) {
         }
         else if (IR.OP == 9) {
             if(IR.M== 1){
-                printf("Output result is: %d\n", PAS[SP]);
+                // Output integer value at top of stack, then pop
+                printf("%d", PAS[SP]);
                 SP = SP + 1;
             } else if(IR.M== 2){
+                // Read an integer from stdin and push it
                 SP = SP - 1;
                 printf("\nPlease Enter an Integer: ");
                 scanf("%d, ", &PAS[SP]);
