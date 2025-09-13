@@ -28,24 +28,24 @@ Class : COP 3402 - Systems Software - Fall 2025
 
 Instructor : Dr . Jie Lin
 
-Due Date : Friday , September 12 th , 2025
+Due Date : Friday , September 12th , 2025
 */
 #include <stdio.h>
 
+// INSTRUCTION STRUCT AND GLOBAL VARIABLE
 struct instruction{
     int OP; 
     int L;
     int M;
 };
 
-// array to represent the entire PAS
 int PAS [500] = {0};
 // instruction register
 struct instruction IR;
 // Registers
 int PC, BP, SP;
 
-
+// BASE FUNCTION
 int base ( int BP , int L ){
     int arb = BP ; // activation record base
     while ( L > 0) {
@@ -56,7 +56,8 @@ int base ( int BP , int L ){
 }
 
 /* Print out the PAS */
-void print(int PAS[500]) {
+void printPAS() {
+
     if(IR.OP == 1) {
         printf("\nLIT");
     }
@@ -74,6 +75,7 @@ void print(int PAS[500]) {
     }
     if(IR.OP == 6) {
         printf("\nINC");
+       
     }
     if(IR.OP == 7) {
         printf("\nJMP");
@@ -83,21 +85,26 @@ void print(int PAS[500]) {
     }
     if(IR.OP == 9) {
         printf("\nSYS");
+
+        
     }
-    printf("\t%d \t%d \t%d \t%d \t%d \t%d\n\n\n", IR.L, IR.M, PC, BP, SP, 0);
+
+    printf("\t%d \t%d \t%d \t%d \t%d ", IR.L, IR.M, PC, BP, SP);
+    
+    
+    printf("\n\n\n");
+
 }
 
 int main(int argc) {
 
+    // Checking argument count
     if(argc != 1){
         printf("Error! Wrong number of arguments.");
         return 0;
     }
     
-    
-    
-
-    
+    // File handling
     FILE *inputFile = fopen("input.txt", "r");
 
     if (inputFile == NULL) {
@@ -105,88 +112,98 @@ int main(int argc) {
         return 1;
     }
     
-    int check; 
+    // Scanning instructions into PAS
     int i = 499;
     
     while(fscanf(inputFile,"%d",&PAS[i]) == 1) {
-            //printf(" %d ", PAS[i]);
             i--;
     }
 
+    // Setting Global Variables
     PC = 499;
     SP = i + 1;
     BP = SP - 1;
+
+    // Initial Print
     printf("\tL \tM \tPC \tBP \tSP \tstack");
     printf("\nInitial values: \t%d \t%d \t%d", PC, BP, SP);
-    while(!(PAS[i] == 9 && PAS[i-1] == 0 && PAS[i-2] == 3)){
+
+   // Fetch-Cycle through a while loop
+    while(1){
         
-        //printf("I");
+        // Setting Instruction Register
         IR.OP = PAS[PC];
         IR.L = PAS[PC-1];
         IR.M = PAS[PC-2];
         
+        // Decrementing PC
         PC = PC - 3;
 
+        // Lit Instruction
         if (IR.OP == 1) {
             SP = SP - 1;  
             PAS[SP] = IR.M;
-            print(&PAS[500]);
+            printPAS();
         }
+        // OPR Instruction
         else if (IR.OP == 2) {
+            
+            // RTN
             if(IR.M == 0){
-                // RTN
+                
                 SP = BP + 1;
                 BP = PAS[SP - 2];
                 PC = PAS[SP - 3];
 
+            // ADD
             } else if(IR.M == 1){
                 PAS[SP + 1] = PAS [SP + 1] + PAS[SP];
                 SP = SP + 1;
-
+            // SUB
             } else if(IR.M == 2){
                 PAS[SP + 1] = PAS [SP + 1] - PAS[SP];
                 SP = SP + 1;
-
+            // MUL
             } else if(IR.M == 3){
                 PAS[SP + 1] = PAS [SP + 1] * PAS[SP];
                 SP = SP + 1;
-
+            // DIV
             } else if(IR.M == 4){
                 PAS[SP + 1] = PAS [SP + 1] / PAS[SP];
                 SP = SP + 1;
-
+            // EQL
             } else if(IR.M == 5){
                 PAS[SP + 1] = (PAS [SP + 1] == PAS[SP]);
                 SP = SP + 1;
-
+            // NEQ
             } else if(IR.M == 6){
                 if(PAS[SP+1] != PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
-
+            // LSS
             } else if(IR.M == 7){
                 if(PAS[SP+1] < PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
-
+            // LEQ
             } else if(IR.M == 8){
                 if(PAS[SP+1] <= PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
-
+            // GTR
             } else if(IR.M == 9){
                 if(PAS[SP+1] > PAS[SP])
                     PAS[SP+1] = 1;
                 else    
                     PAS[SP+1] = 0;
                 SP++;
-
+            // GEQ
             } else if(IR.M == 10){
                 if(PAS[SP+1] >= PAS[SP])
                     PAS[SP+1] = 1;
@@ -194,17 +211,19 @@ int main(int argc) {
                     PAS[SP+1] = 0;
                 SP++;
             } 
-            print(&PAS[500]);
+            printPAS();
         }
+        // LOD Instruction
         else if (IR.OP == 3) {
             SP = SP - 1;
             PAS[SP] = PAS[base(BP, IR.L) - IR.M];
-            print(&PAS[500]);
+            printPAS();
         }
+        // STO Instruction 
         else if (IR.OP == 4) {
-            PAS[SP] = PAS[base(BP, IR.L) - IR.M];
+            PAS[base(BP, IR.L) - IR.M] = PAS[SP];
             SP++;
-            print(&PAS[500]);
+            printPAS();
         }
         else if (IR.OP == 5) {
             PAS[SP - 1] = base(BP, IR.L);
@@ -212,34 +231,39 @@ int main(int argc) {
             PAS[SP - 3] = PC;
             BP = SP - 1;
             PC = 499 - IR.M;
-            print(&PAS[500]);
+            printPAS();
         }
         else if (IR.OP == 6) {
             SP = SP - IR.M;
-            print(&PAS[500]);
+            printPAS();
         }
         else if (IR.OP == 7) {  
             PC = 499 - IR.M;
-            print(&PAS[500]);
+            printPAS();
         }
         else if (IR.OP == 8) {
             if(PAS[SP] == 0) {
                 PC = 499 - IR.M;
             }
             SP = SP + 1;
-            print(&PAS[500]);
+            printPAS();
         }
         else if (IR.OP == 9) {
             if(IR.M== 1){
-                printf("%d", PAS[SP]);
+                printf("Output result is: %d\n", PAS[SP]);
                 SP = SP + 1;
             } else if(IR.M== 2){
                 SP = SP - 1;
                 printf("\nPlease Enter an Integer: ");
-                scanf("%d", &PAS[SP]);
+                scanf("%d, ", &PAS[SP]);
+
                 
+
+            } else if(IR.M == 3){
+                printPAS();
+                break;
             }
-            print(&PAS[500]);
+            printPAS();
         }
         
         
