@@ -40,6 +40,11 @@ struct instruction{
 
 // array to represent the entire PAS
 int PAS [500] = {0};
+// instruction register
+struct instruction IR;
+// Registers
+int PC, BP, SP;
+
 
 int base ( int BP , int L ){
     int arb = BP ; // activation record base
@@ -51,9 +56,35 @@ int base ( int BP , int L ){
 }
 
 /* Print out the PAS */
-void print(int PAS[500]){
-
-
+void print(int PAS[500]) {
+    if(IR.OP == 1) {
+        printf("\nLIT");
+    }
+    if(IR.OP == 2) {
+        printf("\nOPR");
+    }
+    if(IR.OP == 3) {
+        printf("\nLOD");
+    }
+    if(IR.OP == 4) {
+        printf("\nSTO");
+    }
+    if(IR.OP == 5) {
+        printf("\nCAL");
+    }
+    if(IR.OP == 6) {
+        printf("\nINC");
+    }
+    if(IR.OP == 7) {
+        printf("\nJMP");
+    }
+    if(IR.OP == 8) {
+        printf("\nJPC");
+    }
+    if(IR.OP == 9) {
+        printf("\nSYS");
+    }
+    printf("\t%d \t%d \t%d \t%d \t%d \t%d\n\n\n", IR.L, IR.M, PC, BP, SP, 0);
 }
 
 int main(int argc) {
@@ -63,11 +94,9 @@ int main(int argc) {
         return 0;
     }
     
-    // instruction register
-    struct instruction IR;
     
-    // Registers
-    int PC, BP, SP;
+    
+
     
     FILE *inputFile = fopen("input.txt", "r");
 
@@ -86,10 +115,12 @@ int main(int argc) {
 
     PC = 499;
     SP = i + 1;
-    BP = i;
-
+    BP = SP - 1;
+    printf("\tL \tM \tPC \tBP \tSP \tstack");
+    printf("\nInitial values: \t%d \t%d \t%d", PC, BP, SP);
     while(!(PAS[i] == 9 && PAS[i-1] == 0 && PAS[i-2] == 3)){
         
+        //printf("I");
         IR.OP = PAS[PC];
         IR.L = PAS[PC-1];
         IR.M = PAS[PC-2];
@@ -99,9 +130,11 @@ int main(int argc) {
         if (IR.OP == 1) {
             SP = SP - 1;  
             PAS[SP] = IR.M;
+            print(&PAS[500]);
         }
         else if (IR.OP == 2) {
             if(IR.M == 0){
+                // RTN
                 SP = BP + 1;
                 BP = PAS[SP - 2];
                 PC = PAS[SP - 3];
@@ -161,14 +194,17 @@ int main(int argc) {
                     PAS[SP+1] = 0;
                 SP++;
             } 
+            print(&PAS[500]);
         }
         else if (IR.OP == 3) {
             SP = SP - 1;
             PAS[SP] = PAS[base(BP, IR.L) - IR.M];
+            print(&PAS[500]);
         }
         else if (IR.OP == 4) {
             PAS[SP] = PAS[base(BP, IR.L) - IR.M];
             SP++;
+            print(&PAS[500]);
         }
         else if (IR.OP == 5) {
             PAS[SP - 1] = base(BP, IR.L);
@@ -176,18 +212,22 @@ int main(int argc) {
             PAS[SP - 3] = PC;
             BP = SP - 1;
             PC = 499 - IR.M;
+            print(&PAS[500]);
         }
         else if (IR.OP == 6) {
             SP = SP - IR.M;
+            print(&PAS[500]);
         }
         else if (IR.OP == 7) {  
             PC = 499 - IR.M;
+            print(&PAS[500]);
         }
         else if (IR.OP == 8) {
             if(PAS[SP] == 0) {
                 PC = 499 - IR.M;
             }
             SP = SP + 1;
+            print(&PAS[500]);
         }
         else if (IR.OP == 9) {
             if(IR.M== 1){
@@ -195,12 +235,14 @@ int main(int argc) {
                 SP = SP + 1;
             } else if(IR.M== 2){
                 SP = SP - 1;
-                printf("Please Enter an Integer: ");
+                printf("\nPlease Enter an Integer: ");
                 scanf("%d", &PAS[SP]);
                 
             }
+            print(&PAS[500]);
         }
-
+        
+        
     }
     
     fclose(inputFile);
