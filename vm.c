@@ -52,8 +52,8 @@ int base ( int BP , int L ){
 
 /* Print out the PAS */
 void print(int PAS[500]){
-    printf("\t\tL\tM\tPC\tBP\tSP\tstack\n");
-    printf("Initial values: \t ");
+
+
 }
 
 int main(int argc) {
@@ -69,7 +69,7 @@ int main(int argc) {
     // Registers
     int PC, BP, SP;
     
-    FILE *inputFile = fopen("../input.txt", "r");
+    FILE *inputFile = fopen("input.txt", "r");
 
     if (inputFile == NULL) {
         printf("Error opening file.\n");
@@ -83,22 +83,18 @@ int main(int argc) {
             //printf(" %d ", PAS[i]);
             i--;
     }
-    
-    //printf("%d", i);
 
-    
     PC = 499;
-    SP = i;
-    BP = SP - 1;
-    
+    SP = i + 1;
+    BP = i;
 
     while(!(PAS[i] == 9 && PAS[i-1] == 0 && PAS[i-2] == 3)){
-        //printf("I");
+        
         IR.OP = PAS[PC];
         IR.L = PAS[PC-1];
         IR.M = PAS[PC-2];
         
-        PC = PC -3;
+        PC = PC - 3;
 
         if (IR.OP == 1) {
             SP = SP - 1;  
@@ -179,17 +175,17 @@ int main(int argc) {
             PAS[SP - 2] = BP;
             PAS[SP - 3] = PC;
             BP = SP - 1;
-            PC = IR.M;
+            PC = 499 - IR.M;
         }
         else if (IR.OP == 6) {
             SP = SP - IR.M;
         }
         else if (IR.OP == 7) {  
-            PC = PC + 3 - IR.M;
+            PC = 499 - IR.M;
         }
         else if (IR.OP == 8) {
             if(PAS[SP] == 0) {
-                PC = IR.M;
+                PC = 499 - IR.M;
             }
             SP = SP + 1;
         }
@@ -201,6 +197,7 @@ int main(int argc) {
                 SP = SP - 1;
                 printf("Please Enter an Integer: ");
                 scanf("%d", &PAS[SP]);
+                
             }
         }
 
