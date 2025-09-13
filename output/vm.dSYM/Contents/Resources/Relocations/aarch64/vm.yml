@@ -2,9 +2,13 @@
 triple:          'arm64-apple-darwin'
 binary-path:     '/Users/mikaylaphilpot/Desktop/coding/cop3402/hw1/output/vm'
 relocations:
-  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _base, symObjAddr: 0x0, symBinAddr: 0x1000034EC, symSize: 0x5C }
-  - { offsetInCU: 0x3F, offset: 0x3F, size: 0x8, addend: 0x0, symName: _PAS, symObjAddr: 0x1C2C, symBinAddr: 0x100008000, symSize: 0x0 }
-  - { offsetInCU: 0x6B, offset: 0x6B, size: 0x8, addend: 0x0, symName: _base, symObjAddr: 0x0, symBinAddr: 0x1000034EC, symSize: 0x5C }
-  - { offsetInCU: 0xAF, offset: 0xAF, size: 0x8, addend: 0x0, symName: _print, symObjAddr: 0x5C, symBinAddr: 0x100003548, symSize: 0x34 }
-  - { offsetInCU: 0xD3, offset: 0xD3, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x90, symBinAddr: 0x10000357C, symSize: 0x970 }
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _base, symObjAddr: 0x0, symBinAddr: 0x100003090, symSize: 0x5C }
+  - { offsetInCU: 0x3F, offset: 0x3F, size: 0x8, addend: 0x0, symName: _PAS, symObjAddr: 0x2580, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x76, offset: 0x76, size: 0x8, addend: 0x0, symName: _IR, symBinAddr: 0x1000087D4, symSize: 0x0 }
+  - { offsetInCU: 0xB8, offset: 0xB8, size: 0x8, addend: 0x0, symName: _PC, symBinAddr: 0x1000087E0, symSize: 0x0 }
+  - { offsetInCU: 0xCD, offset: 0xCD, size: 0x8, addend: 0x0, symName: _BP, symBinAddr: 0x1000087D0, symSize: 0x0 }
+  - { offsetInCU: 0xE2, offset: 0xE2, size: 0x8, addend: 0x0, symName: _SP, symBinAddr: 0x1000087E4, symSize: 0x0 }
+  - { offsetInCU: 0xEC, offset: 0xEC, size: 0x8, addend: 0x0, symName: _base, symObjAddr: 0x0, symBinAddr: 0x100003090, symSize: 0x5C }
+  - { offsetInCU: 0x130, offset: 0x130, size: 0x8, addend: 0x0, symName: _print, symObjAddr: 0x5C, symBinAddr: 0x1000030EC, symSize: 0x1F8 }
+  - { offsetInCU: 0x154, offset: 0x154, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x254, symBinAddr: 0x1000032E4, symSize: 0xB9C }
 ...
